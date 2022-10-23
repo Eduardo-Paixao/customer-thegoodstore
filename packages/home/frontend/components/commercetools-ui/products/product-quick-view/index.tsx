@@ -1,6 +1,7 @@
 import { CSSProperties, FC, useState } from 'react';
 import { XIcon } from '@heroicons/react/outline';
 import { Product } from '@Types/product/Product';
+import { Variant } from '@Types/product/Variant';
 import Modal from 'react-modal';
 import { useFormat } from 'helpers/hooks/useFormat';
 import ProductDetailsAdapter from '../product-details/adapter';
@@ -48,14 +49,16 @@ const QuickView: FC<QuickViewProps> = ({ imageHovered, isDesktopSize, product })
 
   return (
     <>
-      <button
-        className={`w-full border border-neutral-400 bg-white py-16 text-center text-12 capitalize leading-[16px] transition duration-150 ease-out hover:border-primary-black ${
-          imageHovered && isDesktopSize ? 'block' : 'hidden'
-        }`}
-        onClick={openModal}
-      >
-        {formatMessage({ id: 'quick.view', defaultMessage: 'Quick view' })}
-      </button>
+      {!modalIsOpen && (
+        <button
+          className={`w-full border border-neutral-400 bg-white py-16 text-center text-12 capitalize leading-[16px] transition duration-150 ease-out hover:border-primary-black ${
+            imageHovered && isDesktopSize ? 'block' : 'hidden'
+          }`}
+          onClick={openModal}
+        >
+          {formatMessage({ id: 'quick.view', defaultMessage: 'Quick view' })}
+        </button>
+      )}
 
       <Modal
         shouldCloseOnOverlayClick
@@ -71,7 +74,7 @@ const QuickView: FC<QuickViewProps> = ({ imageHovered, isDesktopSize, product })
             color="#494949"
             onClick={closeModal}
           />
-          <ProductDetailsAdapter product={product} inModalVersion={true} />
+          <ProductDetailsAdapter product={product} inModalVersion={true} setIsOpen={setIsOpen} />
         </>
       </Modal>
     </>
