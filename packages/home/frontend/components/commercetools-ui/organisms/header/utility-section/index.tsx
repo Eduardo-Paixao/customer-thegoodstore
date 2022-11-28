@@ -6,8 +6,15 @@ import WishlistIcon from 'components/icons/wishlist';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useCart, useWishlist } from 'frontastic/provider';
 import AccountButton from './account-button';
+import { Link } from 'components/commercetools-ui/organisms/header/types';
+import { NextFrontasticImage } from 'frontastic/lib/image';
 
-const UtilitySection: React.FC = () => {
+interface Props {
+  emptyCartImage?: NextFrontasticImage;
+  emptyCartCategories: Link[];
+}
+
+const UtilitySection: React.FC<Props> = ({ emptyCartImage, emptyCartCategories }) => {
   const { totalItems: totalCartItems } = useCart();
   const { totalItems: totalWishlistItems } = useWishlist();
   const { formatMessage: formatCartMessage } = useFormat({ name: 'cart' });
@@ -58,6 +65,8 @@ const UtilitySection: React.FC = () => {
           state={menuState}
           onClose={() => setIsDrawerOpen(false)}
           changeState={(newState) => setMenuState(newState)}
+          emptyCartImage={emptyCartImage}
+          emptyCartCategories={emptyCartCategories}
         />
       </Drawer>
     </div>

@@ -7,7 +7,17 @@ import { HeaderProps } from 'components/commercetools-ui/organisms/header/types'
 import UtilitySection from 'components/commercetools-ui/organisms/header/utility-section';
 import MarketButton from '../../organisms/market-button/market-button';
 
-const Header: React.FC<HeaderProps> = ({ links, markets, market, logo, logoLink, tiles, handleMarket }) => {
+const Header: React.FC<HeaderProps> = ({
+  links,
+  markets,
+  market,
+  logo,
+  logoLink,
+  tiles,
+  handleMarket,
+  emptyCartImage,
+  emptyCartCategories,
+}) => {
   const [activeCategory, setActiveCategory] = useState<Category>(undefined);
 
   const showSubMenu = (category?: Category) => {
@@ -41,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ links, markets, market, logo, logoLink,
 
         <HeaderLogo market={market} logo={logo} logoLink={logoLink} />
 
-        <UtilitySection />
+        <UtilitySection emptyCartImage={emptyCartImage} emptyCartCategories={emptyCartCategories} />
       </div>
 
       <HeaderNavigationDesktop

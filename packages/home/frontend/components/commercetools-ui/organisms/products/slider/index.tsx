@@ -33,7 +33,6 @@ export default function ProductSlider({
   const [isDesktopSize] = useMediaQuery(desktop);
 
   const { isTouchDevice } = useTouchDevice();
-  console.log(isTouchDevice);
   return (
     <Wrapper background="neutral-200" variant="left-padding-only">
       <div>

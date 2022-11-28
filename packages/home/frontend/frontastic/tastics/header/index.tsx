@@ -77,8 +77,11 @@ const HeaderTastic = ({ data, categories }) => {
         logoLink={data.logoLink}
         tiles={data.tiles}
         handleMarket={handleMarket}
+        emptyCartImage={data.emptyCartImage}
+        emptyCartCategories={data.emptyCartCategories}
       />
     </div>
   );
 };
+
 export default HeaderTastic;

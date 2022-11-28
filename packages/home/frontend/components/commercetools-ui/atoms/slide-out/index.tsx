@@ -2,13 +2,16 @@ import React, { useMemo } from 'react';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import CartIcon from 'components/icons/cart';
 import CloseIcon from 'components/icons/close';
+import DiscountForm from '../../organisms/discount-form';
+import Button from 'components/commercetools-ui/atoms/button';
+import { Link } from 'components/commercetools-ui/organisms/header/types';
 import { CurrencyHelpers } from 'helpers/currencyHelpers';
 import useClassNames from 'helpers/hooks/useClassNames';
 import { useFormat } from 'helpers/hooks/useFormat';
 import { useCart, useWishlist } from 'frontastic';
-import DiscountForm from '../../organisms/discount-form';
-import AccordionBtn from '../accordion';
 import CartItem from './cart-item';
+import EmptyCart from './empty-cart';
+import { NextFrontasticImage } from 'frontastic/lib/image';
 
 export type State = 'wishlist' | 'cart';
 
@@ -16,9 +19,11 @@ export interface Props {
   state?: State;
   changeState?: (newState?: State) => void;
   onClose?: () => void;
+  emptyCartImage: NextFrontasticImage;
+  emptyCartCategories: Link[];
 }
 
-const Slideout: React.FC<Props> = ({ state, changeState, onClose }) => {
+const Slideout: React.FC<Props> = ({ state, changeState, onClose, emptyCartImage, emptyCartCategories }) => {
   const { formatMessage: formatCartMessage } = useFormat({ name: 'cart' });
   const { formatMessage: formatWishlistMessage } = useFormat({ name: 'wishlist' });
 
@@ -89,24 +94,27 @@ const Slideout: React.FC<Props> = ({ state, changeState, onClose }) => {
     if (state === 'cart') {
       return (
         <>
-          <div className="grow divide-y divide-neutral-400 overflow-auto px-12 md:px-22">
-            {cartData.lineItems?.map((lineItem) => (
-              <CartItem key={lineItem.lineItemId} item={lineItem} />
-            ))}
+          <div className="flex grow flex-col items-center overflow-auto border-b border-neutral-400 px-12 md:px-22">
+            {cartData.lineItems.length ? (
+              cartData.lineItems?.map((lineItem) => <CartItem key={lineItem.lineItemId} item={lineItem} />)
+            ) : (
+              <EmptyCart emptyCartCategories={emptyCartCategories} emptyCartImage={emptyCartImage} />
+            )}
           </div>
-          <div className="border-t border-neutral-400 px-12 pt-16 pb-24 md:px-22">
-            <AccordionBtn
-              closedSectionTitle={formatCartMessage({ id: 'discount.apply', defaultMessage: 'Apply a discount' })}
-              buttonClassName="font-medium text-14"
-            >
+
+          {!!cartData.lineItems.length && (
+            <div className="border-t border-neutral-400 px-12 pt-16 pb-24 md:px-22">
               <DiscountForm />
-            </AccordionBtn>
-          </div>
-          <div className="border-t border-neutral-400 bg-white px-12 pt-16 pb-18 md:px-22">
-            <div className="flex items-center justify-between text-14">
-              <span>{formatCartMessage({ id: 'subtotal', defaultMessage: 'Subtotal' })} </span>
-              <span>{CurrencyHelpers.formatForCurrency(transaction.subtotal)}</span>
             </div>
+          )}
+
+          <div className="border-t border-neutral-400 bg-white px-12 pt-16 pb-18 md:px-22">
+            {!!cartData.lineItems.length && (
+              <div className="flex items-center justify-between">
+                <span>{formatCartMessage({ id: 'subtotal', defaultMessage: 'Subtotal' })}: </span>
+                <span>{CurrencyHelpers.formatForCurrency(transaction.subtotal)}</span>
+              </div>
+            )}
 
             {transaction.discount.centAmount > 0 && (
               <div className="flex items-center justify-between text-14">
@@ -115,10 +123,12 @@ const Slideout: React.FC<Props> = ({ state, changeState, onClose }) => {
               </div>
             )}
 
-            <div className="flex items-center justify-between text-14">
-              <span>{formatCartMessage({ id: 'tax', defaultMessage: 'Tax' })} </span>
-              <span>{CurrencyHelpers.formatForCurrency(transaction.tax)}</span>
-            </div>
+            {transaction.tax.centAmount > 0 && (
+              <div className="flex items-center justify-between">
+                <span>{formatCartMessage({ id: 'tax', defaultMessage: 'Tax' })}: </span>
+                <span>{CurrencyHelpers.formatForCurrency(transaction.tax)}</span>
+              </div>
+            )}
 
             {transaction.shipping.centAmount > 0 && (
               <div className="flex items-center justify-between text-14">
@@ -127,15 +137,18 @@ const Slideout: React.FC<Props> = ({ state, changeState, onClose }) => {
               </div>
             )}
 
-            <div className="mt-26 flex items-center justify-between font-semibold">
+            <div className="mt-26 flex items-center justify-between text-18 font-semibold">
               <span>{formatCartMessage({ id: 'total', defaultMessage: 'Total' })}: </span>
               <span>{CurrencyHelpers.formatForCurrency(transaction.total)}</span>
             </div>
-
             <div className="mt-16">
-              <button className="w-full rounded-md bg-primary-black py-12 font-medium text-white">
+              <Button
+                variant="primary"
+                className="w-full rounded-md bg-primary-black py-12 text-16 font-medium text-white"
+                disabled={!cartData.lineItems.length}
+              >
                 {formatCartMessage({ id: 'checkout.go', defaultMessage: 'Go to checkout' })}
-              </button>
+              </Button>
             </div>
           </div>
         </>
