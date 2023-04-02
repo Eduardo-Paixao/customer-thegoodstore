@@ -49,7 +49,7 @@ const OrderSummary: FC<OrderSummaryProps> = ({ order, onPrint }) => {
           fontFamily="libre"
           fontSize={16}
           asSkeleton={!order.sum}
-          className="w-fit leading-[20px] text-primary-black"
+          className="w-fit leading-[20px] text-primary-black md:text-18"
         >
           {formatMessage({ id: 'order.details', defaultMessage: 'Order details' })}
         </Typography>
