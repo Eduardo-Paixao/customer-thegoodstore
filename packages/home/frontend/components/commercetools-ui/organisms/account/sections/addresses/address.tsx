@@ -27,7 +27,7 @@ const Address: React.FC<AddressProps> = ({ address }) => {
   const addressInfoTypographyProps: TypographyProps = {
     fontSize: 14,
     lineHeight: 'tight',
-    className: 'text-secondary-black',
+    className: 'text-primary-black',
   };
 
   const addressInfoTypographyElements = [
@@ -56,7 +56,7 @@ const Address: React.FC<AddressProps> = ({ address }) => {
               {label}
             </Typography>
             {checked && (
-              <Typography fontSize={14} className="text-secondary-black md:hidden">
+              <Typography fontSize={14} className="text-primary-black md:hidden">
                 {'- ' + formatMessage({ id: 'default', defaultMessage: 'Default' })}
               </Typography>
             )}
